@@ -1,4 +1,4 @@
-![image](https://github.com/dgddgd314/img2txt_v1/assets/96764591/1b1a3b45-114a-4664-8e03-57c6bb49d999)# img2txt_v1
+# img2txt_v1
 This is not OCR program, nor AI-based program. But this code cut the image into fraction, and find the letter that best represents it.
 
 ## method
