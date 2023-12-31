@@ -1,30 +1,38 @@
+import cv2
+import math
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 
+# importing image
+def importimage(filepath):
+
+    img = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
+    return img
+
 # changes single letter into array
-def create_image_array_from_text(text, size=(15, 15)):
-    # image size and bg color
+def create_image_array_from_text(text, size=(100, 100)):
+    # image size and bgcolor
     width, height = size
     background_color = 0
 
-    # generating img array
+    # make new img file
     image = Image.new("L", (width, height), background_color)
     draw = ImageDraw.Draw(image)
 
     # font
     font_size = size[0]
-    font = ImageFont.truetype("arial.ttf", font_size)
+    font = ImageFont.truetype("arial.ttf", font_size) 
 
-    # text location 
-    text_width, text_height = draw.textsize(text, font)
-    x = (width - text_width) // 2
-    y = (height - text_height) // 2
+    text_bbox = draw.textbbox((0, 0), text, font=font)
+
+    # drawing in the middle
+    x = (width - (text_bbox[2] - text_bbox[0])) // 2 - text_bbox[0]
+    y = (height - (text_bbox[3] - text_bbox[1])) // 2 - text_bbox[1]
     draw.text((x, y), text, fill=255, font=font) 
-
-    # image to array
+    
     image_array = np.array(image)
 
-    return image_array/255
+    return image_array
 
 # slice the sequence
 def create_seq_list(seq, size=(15,15)):
@@ -73,7 +81,7 @@ def cal_distance(m1, m2, method):
     else : 
         raise NameError
     
-
+# find the closest matrix among matrix list
 def find_closest_matrix(target_matrix, matrix_list, method = 'Euclidean'):
     closest_matrix = None
     min_distance = float('inf')
@@ -91,24 +99,47 @@ def find_closest_matrix(target_matrix, matrix_list, method = 'Euclidean'):
             closest_matrix = candidate_matrix
             index = i
             
-    print(min_distance, method, index)
+    # print(min_distance, method, index)
 
-    return closest_matrix
+    return index
 
-# example
+# slice the img into block, and get the best letter expressing the block
+def img2txt(img, size, method = 'Euclidean'):
+    
+    if len(img.shape) != 2:
+        raise Exception('Wrong dimension!')
+    
+    rows = math.floor(img.shape[0]/size)
+    cols = math.floor(img.shape[1]/size)
+    
+    pixel = np.empty((rows, cols), dtype=str)
+    
+    for y in range(rows):
+        for x in range(cols):
+            block = img[y * size: (y + 1) * size, x * size: (x + 1) * size]
+            i = find_closest_matrix(block, seq_list, method)
+            pixel[y, x] = seq[i]
+            
+    return pixel
 
-seq = '!@#$%^&*()qwertyuiop[]asdfghjkl;zxcvbnm,./QWERTYUIOPASDFGHJKL:"ZXCVBNM<>?1234567890-='
-size = (6,6)
+# print full array without loss
+def printfullarray(array):
+    
+    rows, cols = array.shape
+    for i in range(rows):
+        for j in range(cols):
+            print(array[i][j], end = '')
+        print()
 
-seq_list = create_seq_list(seq, size = size)
 
-#print(seq_list)
 
-matrix1 = np.random.rand(6,6)
-#matrix1 = create_image_array_from_text('#', size = size)
+seq = '!@#$%^&*()qwertyuiop[]asdfghjkl;zxcvbnm,./QWERTYUIOPASDFGHJKL:"ZXCVBNM<>?1234567890-= ■□'    # list of letters
+size = 6    # size of block
+file_path = r"C:\Users\82103\Downloads\example.jpg"     # location on the img
 
-print(f'{matrix1} : matrix1 \n')
+# as you can check, the file is Eiffel Tower
+seq_list = create_seq_list(seq, size = (size, size))
+img = importimage(file_path)
+pixel = img2txt(img, size = size)
 
-closest_matrix = find_closest_matrix(matrix1, seq_list)
-
-print(closest_matrix)
+printfullarray(pixel)
