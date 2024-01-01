@@ -77,6 +77,19 @@ def cal_distance(m1, m2, method):
         correlation_coefficient = cov / (std_m1 * std_m2)
         return 1 - correlation_coefficient # because we are calculating distance;not the similartiy
     
+    # when best-expressing matrix is chosen by Manhattan Distance
+    elif method == 'manhattan' :
+        distance = np.sum(np.abs(m1 - m2))
+        return distance
+    
+    # when best-expressing matrix is chosen by Hellinger Distance
+    elif method == 'hellinger' : 
+        sqrt_m1 = np.sqrt(m1 / np.sum(m1))
+        sqrt_m2 = np.sqrt(m2 / np.sum(m2))
+    
+        distance = np.sqrt(0.5 * np.sum((sqrt_m1 - sqrt_m2)**2))
+        return distance
+    
     # when method name is wrong
     else : 
         raise NameError
@@ -134,12 +147,12 @@ def printfullarray(array):
 
 
 seq = '!@#$%^&*()qwertyuiop[]asdfghjkl;zxcvbnm,./QWERTYUIOPASDFGHJKL:"ZXCVBNM<>?1234567890-= ■□'    # list of letters
-size = 6    # size of block
+size = 10    # size of block
 file_path = r"C:\Users\82103\Downloads\example.jpg"     # location on the img
 
 # as you can check, the file is Eiffel Tower
 seq_list = create_seq_list(seq, size = (size, size))
 img = importimage(file_path)
-pixel = img2txt(img, size = size)
+pixel = img2txt(img, size = size, method = 'corr')
 
 printfullarray(pixel)
