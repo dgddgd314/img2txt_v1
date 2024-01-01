@@ -82,14 +82,6 @@ def cal_distance(m1, m2, method):
         distance = np.sum(np.abs(m1 - m2))
         return distance
     
-    # when best-expressing matrix is chosen by Hellinger Distance
-    elif method == 'hellinger' : 
-        sqrt_m1 = np.sqrt(m1 / np.sum(m1))
-        sqrt_m2 = np.sqrt(m2 / np.sum(m2))
-    
-        distance = np.sqrt(0.5 * np.sum((sqrt_m1 - sqrt_m2)**2))
-        return distance
-    
     # when method name is wrong
     else : 
         raise NameError
@@ -117,7 +109,7 @@ def find_closest_matrix(target_matrix, matrix_list, method = 'Euclidean'):
     return index
 
 # slice the img into block, and get the best letter expressing the block
-def img2txt(img, size, method = 'Euclidean'):
+def img2txt(img, size, method = 'Euclidean', conv = 'None'):
     
     if len(img.shape) != 2:
         raise Exception('Wrong dimension!')
@@ -127,6 +119,10 @@ def img2txt(img, size, method = 'Euclidean'):
     
     pixel = np.empty((rows, cols), dtype=str)
     
+    # if there is convolution, apply it before dividing
+    # not yet done...
+    
+    # divide the block, and find the letter that best represents it
     for y in range(rows):
         for x in range(cols):
             block = img[y * size: (y + 1) * size, x * size: (x + 1) * size]
@@ -153,6 +149,6 @@ file_path = r"C:\Users\82103\Downloads\example.jpg"     # location on the img
 # as you can check, the file is Eiffel Tower
 seq_list = create_seq_list(seq, size = (size, size))
 img = importimage(file_path)
-pixel = img2txt(img, size = size, method = 'corr')
+pixel = img2txt(img, size = size, method = 'manhattan')
 
 printfullarray(pixel)
