@@ -2,11 +2,14 @@
 This is not OCR program, nor AI-based program. But this code cut the image into fraction, and find the letter that best represents it.
 
 ## method
-There can be more method as I continuously update this program. Today, this program supports Euclidean Distance, Cosine Similarity, and Pearson Correlation.
+There can be more method as I continuously update this program. Today, this program supports Euclidean Distance, Cosine Similarity, Manhattan Distance and Pearson Correlation.
+
+## convolution layer
+I updated convolution layer : blur, edge detection, vertical/horizontal edge detection. You can apply 2(and more) layers if you give input as list.
 
 ## Future Features
-Soon, I will update the Convolution method : for edge detection etc. 
 I can update the program for every UI as there is some inconvenience.
+Maybe I will try to make this distribute version; because this is first project for me
 
 ## examples
 with Euclidean Distance : 
