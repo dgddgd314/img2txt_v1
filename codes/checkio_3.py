@@ -193,13 +193,13 @@ def printfullarray(array):
 
 
 
-seq = '!#$%^&*()<>?1234567890-= ■□'    # list of letters
+seq = '─│┌┐┘└├┬┤┴┼ /'    # list of letters
 size = 5    # size of block
-file_path = r"yourfile.jpg"     # location on the img
+file_path = r"C:\Users\82103\Downloads\example.jpg"     # location on the img
 
 # as you can check, the file is Eiffel Tower
 seq_list = create_seq_list(seq, size = (size, size))
 img = importimage(file_path)
-pixel = img2txt(img, size = size, method = 'manhattan', conv = 'blur')
+pixel = img2txt(img, size = size, method = 'euclidean')
 
 printfullarray(pixel)
